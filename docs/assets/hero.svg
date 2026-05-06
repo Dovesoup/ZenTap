@@ -1,0 +1,54 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ZenTap hero artwork</title>
+  <desc id="desc">A quiet porcelain lake with a bamboo leaf and a small ZenTap floating panel.</desc>
+  <rect width="1280" height="640" fill="#F4EFE4"/>
+  <path d="M0 0H1280V640H0V0Z" fill="url(#paper)"/>
+  <g opacity=".24">
+    <path d="M0 112H1280M0 224H1280M0 336H1280M0 448H1280M0 560H1280" stroke="#CFC4B2"/>
+    <path d="M160 0V640M320 0V640M480 0V640M640 0V640M800 0V640M960 0V640M1120 0V640" stroke="#CFC4B2"/>
+  </g>
+  <g transform="translate(92 92)">
+    <text x="0" y="55" fill="#191713" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="54" font-weight="700">指言 ZenTap</text>
+    <text x="0" y="102" fill="#61594D" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="24">Tap to speak. Stay private. Flow gently.</text>
+    <text x="0" y="167" fill="#3F5F50" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="25" font-weight="600">为每一个人设计的轻触式语音输入</text>
+    <text x="0" y="210" fill="#71685A" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="19">A tiny floating macOS dictation tool inspired by porcelain water, bamboo, and calm attention.</text>
+  </g>
+  <g transform="translate(768 112)">
+    <rect x="0" y="0" width="286" height="324" rx="20" fill="#F7F1E7" stroke="#D7CCBA" stroke-width="2"/>
+    <text x="143" y="48" text-anchor="middle" fill="#27231D" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="24" font-weight="700">指言</text>
+    <g transform="translate(143 148)">
+      <circle r="78" fill="url(#lake)" stroke="white" stroke-width="3"/>
+      <ellipse cx="0" cy="6" rx="58" ry="23" stroke="white" stroke-opacity=".52" stroke-width="2"/>
+      <ellipse cx="0" cy="8" rx="39" ry="15" stroke="white" stroke-opacity=".45" stroke-width="2"/>
+      <ellipse cx="0" cy="10" rx="21" ry="8" stroke="white" stroke-opacity=".38" stroke-width="2"/>
+      <g transform="rotate(-15)">
+        <path d="M-50 0C-19-23 28-18 58 1C26 22-21 20-50 0Z" fill="url(#leaf)"/>
+        <path d="M-37 1C-8-3 22-2 45 1" stroke="#F3F1D8" stroke-opacity=".52" stroke-width="2" stroke-linecap="round"/>
+        <path d="M54 1L75 4" stroke="#9B2F22" stroke-opacity=".76" stroke-width="4" stroke-linecap="round"/>
+      </g>
+    </g>
+    <text x="143" y="282" text-anchor="middle" fill="#9B2F22" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="22" font-weight="600">轻触输入</text>
+  </g>
+  <g transform="translate(104 478)" fill="#191713" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif">
+    <text x="0" y="0" font-size="17" opacity=".66">Offline-first</text>
+    <text x="170" y="0" font-size="17" opacity=".66">Chinese &amp; English</text>
+    <text x="390" y="0" font-size="17" opacity=".66">Mouse-friendly</text>
+    <text x="580" y="0" font-size="17" opacity=".66">Open source</text>
+  </g>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1280" y2="640">
+      <stop stop-color="#FAF6EC"/>
+      <stop offset="1" stop-color="#E9DFCC"/>
+    </linearGradient>
+    <radialGradient id="lake" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(120 -10 22) scale(122)">
+      <stop stop-color="#E8F2EA"/>
+      <stop offset=".42" stop-color="#BFD7CD"/>
+      <stop offset=".75" stop-color="#87A99C"/>
+      <stop offset="1" stop-color="#5B746A"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="-46" y1="-16" x2="56" y2="12">
+      <stop stop-color="#5D7C4D"/>
+      <stop offset="1" stop-color="#2C513D"/>
+    </linearGradient>
+  </defs>
+</svg>

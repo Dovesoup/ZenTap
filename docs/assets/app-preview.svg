@@ -1,0 +1,61 @@
+<svg width="960" height="560" viewBox="0 0 960 560" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ZenTap floating modes</title>
+  <desc id="desc">Standard mode and Zen mode previews of the ZenTap floating window.</desc>
+  <rect width="960" height="560" rx="28" fill="#F5EFE4"/>
+  <g opacity=".28" stroke="#D4C8B7">
+    <path d="M0 80H960M0 160H960M0 240H960M0 320H960M0 400H960M0 480H960"/>
+    <path d="M120 0V560M240 0V560M360 0V560M480 0V560M600 0V560M720 0V560M840 0V560"/>
+  </g>
+  <text x="110" y="88" fill="#191713" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="30" font-weight="700">Two calm surfaces</text>
+  <text x="110" y="124" fill="#71685A" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="18">标准模式提供状态文字；禅意模式只留下湖面与竹叶。</text>
+
+  <g transform="translate(174 180)">
+    <rect width="244" height="276" rx="18" fill="#F7F1E7" stroke="#D7CCBA" stroke-width="2"/>
+    <text x="122" y="39" text-anchor="middle" fill="#27231D" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="20" font-weight="700">指言 ZenTap</text>
+    <rect x="185" y="20" width="38" height="24" rx="9" fill="#EAE0CF"/>
+    <text x="204" y="37" text-anchor="middle" fill="#433C31" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="13" font-weight="700">中</text>
+    <g transform="translate(122 132)">
+      <circle r="62" fill="url(#lake)" stroke="white" stroke-width="2"/>
+      <ellipse cx="0" cy="7" rx="46" ry="18" stroke="white" stroke-opacity=".48" stroke-width="2"/>
+      <ellipse cx="0" cy="9" rx="30" ry="12" stroke="white" stroke-opacity=".38" stroke-width="2"/>
+      <g transform="rotate(-16)">
+        <path d="M-40 0C-15-18 23-14 47 1C21 18-16 16-40 0Z" fill="url(#leaf)"/>
+        <path d="M-29 1C-6-2 18-2 36 1" stroke="#F5F0D6" stroke-opacity=".52" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M44 1L60 3" stroke="#2F4F34" stroke-opacity=".68" stroke-width="3" stroke-linecap="round"/>
+      </g>
+    </g>
+    <path d="M38 212H206" stroke="#E0D6C5"/>
+    <text x="122" y="237" text-anchor="middle" fill="#9B2F22" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="18" font-weight="600">轻触输入</text>
+    <text x="122" y="260" text-anchor="middle" fill="#71685A" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="14">中文</text>
+    <text x="122" y="320" text-anchor="middle" fill="#191713" opacity=".72" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="18" font-weight="650">Standard</text>
+  </g>
+
+  <g transform="translate(594 226)">
+    <circle cx="92" cy="92" r="90" fill="#F7F1E7" stroke="#D7CCBA" stroke-width="2"/>
+    <g transform="translate(92 92)">
+      <circle r="68" fill="url(#lake)" stroke="white" stroke-width="2"/>
+      <ellipse cx="0" cy="7" rx="50" ry="20" stroke="white" stroke-opacity=".48" stroke-width="2"/>
+      <ellipse cx="0" cy="9" rx="32" ry="13" stroke="white" stroke-opacity=".40" stroke-width="2"/>
+      <ellipse cx="0" cy="11" rx="18" ry="8" stroke="white" stroke-opacity=".34" stroke-width="2"/>
+      <g transform="rotate(-16)">
+        <path d="M-43 0C-16-20 25-16 51 1C23 19-18 18-43 0Z" fill="url(#leaf)"/>
+        <path d="M-32 1C-7-3 20-2 39 1" stroke="#F5F0D6" stroke-opacity=".52" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M48 1L66 3" stroke="#2F4F34" stroke-opacity=".68" stroke-width="3.4" stroke-linecap="round"/>
+      </g>
+    </g>
+    <text x="92" y="244" text-anchor="middle" fill="#191713" opacity=".72" font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Segoe UI',sans-serif" font-size="18" font-weight="650">Zen Mode</text>
+  </g>
+
+  <defs>
+    <radialGradient id="lake" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="rotate(120 -8 20) scale(108)">
+      <stop stop-color="#E8F2EA"/>
+      <stop offset=".42" stop-color="#BFD7CD"/>
+      <stop offset=".75" stop-color="#87A99C"/>
+      <stop offset="1" stop-color="#5B746A"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="-40" y1="-14" x2="48" y2="12">
+      <stop stop-color="#5D7C4D"/>
+      <stop offset="1" stop-color="#2C513D"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>指言 ZenTap UI Concepts</title>
+  <style>
+    :root {
+      --paper: #f3eee3;
+      --paper-deep: #e7ddcb;
+      --ink: #191713;
+      --muted: #746b5d;
+      --lake: #a9c8bd;
+      --lake-deep: #5f857c;
+      --leaf: #486b42;
+      --leaf-dark: #2f4f34;
+      --cinnabar: #9b2f22;
+      --line: rgba(32, 28, 22, 0.14);
+      --shadow: 0 18px 54px rgba(29, 24, 17, 0.13);
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(90deg, rgba(25, 23, 19, 0.035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(25, 23, 19, 0.03) 1px, transparent 1px),
+        var(--paper);
+      background-size: 44px 44px;
+      color: var(--ink);
+    }
+
+    .page {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 46px 36px 56px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+      padding-bottom: 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.1;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .mark {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(32, 28, 22, 0.16);
+      background: rgba(255, 252, 244, 0.46);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      border-radius: 8px;
+      color: var(--cinnabar);
+      font-weight: 700;
+      font-size: 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(218px, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .concept {
+      min-height: 646px;
+      padding: 18px;
+      border: 1px solid rgba(32, 28, 22, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 252, 244, 0.52);
+      box-shadow: var(--shadow);
+    }
+
+    .concept h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.3;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .concept p {
+      min-height: 68px;
+      margin: 8px 0 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .states {
+      display: grid;
+      gap: 12px;
+    }
+
+    .state-row {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .state-label {
+      color: rgba(25, 23, 19, 0.52);
+      font-size: 12px;
+      line-height: 1;
+      text-align: right;
+    }
+
+    .widget {
+      position: relative;
+      width: 122px;
+      height: 138px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid rgba(25, 23, 19, 0.13);
+      border-radius: 8px;
+      background: rgba(250, 246, 236, 0.92);
+      box-shadow:
+        0 12px 32px rgba(30, 25, 18, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    }
+
+    .widget::before {
+      content: "指言";
+      position: absolute;
+      top: 11px;
+      left: 0;
+      right: 0;
+      color: rgba(25, 23, 19, 0.78);
+      font-size: 12px;
+      font-weight: 650;
+      text-align: center;
+      letter-spacing: 0;
+    }
+
+    .widget::after {
+      content: attr(data-copy);
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 13px;
+      color: rgba(25, 23, 19, 0.58);
+      font-size: 11px;
+      line-height: 1.1;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lake {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      width: 70px;
+      height: 70px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 44% 38%, rgba(255, 255, 246, 0.72) 0 18%, transparent 19%),
+        radial-gradient(circle at 50% 52%, rgba(126, 171, 160, 0.50), rgba(76, 123, 115, 0.36) 64%, rgba(58, 86, 80, 0.10) 100%);
+      box-shadow:
+        inset 0 1px 8px rgba(255, 255, 255, 0.68),
+        inset 0 -12px 20px rgba(53, 76, 70, 0.10);
+    }
+
+    .lake .ripple {
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255, 255, 246, 0.42);
+      border-radius: 50%;
+      opacity: 0.85;
+    }
+
+    .lake .ripple:nth-child(2) {
+      inset: 23px;
+      opacity: 0.72;
+    }
+
+    .lake .ripple:nth-child(3) {
+      inset: 4px;
+      opacity: 0.32;
+    }
+
+    .leaf {
+      position: absolute;
+      left: 50%;
+      top: 51%;
+      width: 36px;
+      height: 13px;
+      transform: translate(-50%, -50%) rotate(-18deg);
+      transform-origin: 42% 56%;
+      border-radius: 100% 0 100% 0;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.38), transparent 30%),
+        linear-gradient(110deg, var(--leaf), var(--leaf-dark));
+      box-shadow: 0 5px 10px rgba(33, 47, 30, 0.14);
+    }
+
+    .leaf::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      top: 6px;
+      height: 1px;
+      background: rgba(245, 245, 224, 0.50);
+      transform: rotate(-4deg);
+    }
+
+    .leaf::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 6px;
+      width: 9px;
+      height: 1px;
+      background: rgba(47, 79, 52, 0.72);
+      transform: rotate(16deg);
+      transform-origin: left center;
+    }
+
+    .listening .lake .ripple {
+      animation: ripple 2.2s ease-in-out infinite;
+    }
+
+    .listening .lake .ripple:nth-child(2) {
+      animation-delay: .28s;
+    }
+
+    .listening .lake .ripple:nth-child(3) {
+      animation-delay: .56s;
+    }
+
+    .listening .leaf {
+      animation: leaf-sway 1.8s ease-in-out infinite;
+    }
+
+    .settle .lake .ripple {
+      opacity: 0.44;
+      transform: scale(1.02);
+    }
+
+    .settle .leaf {
+      transform: translate(-50%, -50%) rotate(-6deg);
+    }
+
+    @keyframes ripple {
+      0%, 100% { transform: scale(.88); opacity: .38; }
+      48% { transform: scale(1.22); opacity: .82; }
+    }
+
+    @keyframes leaf-sway {
+      0%, 100% { transform: translate(-50%, -50%) rotate(-18deg) translateY(0); }
+      50% { transform: translate(-50%, -50%) rotate(9deg) translateY(-2px); }
+    }
+
+    .concept-a .widget {
+      background: rgba(250, 246, 236, 0.94);
+    }
+
+    .concept-a .lake {
+      width: 72px;
+      height: 72px;
+      background:
+        radial-gradient(circle at 44% 36%, rgba(255,255,247,.70) 0 16%, transparent 17%),
+        radial-gradient(circle at 52% 56%, #b5d1c5, #71988d 68%, rgba(74, 91, 83, .10));
+    }
+
+    .concept-b .widget {
+      background:
+        linear-gradient(180deg, rgba(250, 247, 239, .96), rgba(235, 230, 218, .92));
+    }
+
+    .concept-b .lake {
+      width: 64px;
+      height: 64px;
+      background:
+        radial-gradient(circle at 48% 42%, rgba(255,255,246,.66) 0 12%, transparent 13%),
+        radial-gradient(circle, rgba(177,189,177,.48), rgba(61,73,66,.28) 72%),
+        #d8d5c8;
+      box-shadow: inset 0 0 0 1px rgba(28, 27, 24, .10), inset 0 8px 18px rgba(255,255,255,.44);
+    }
+
+    .concept-b .leaf {
+      width: 42px;
+      height: 10px;
+      background: linear-gradient(100deg, #4b6144, #253a2f);
+    }
+
+    .concept-c .widget {
+      background: rgba(246, 244, 235, .80);
+      backdrop-filter: blur(12px);
+    }
+
+    .concept-c .lake {
+      width: 74px;
+      height: 74px;
+      background:
+        radial-gradient(circle at 40% 32%, rgba(255, 255, 250, .86), transparent 18%),
+        radial-gradient(circle at 58% 62%, rgba(160,196,188,.50), rgba(70,119,114,.34) 70%);
+      box-shadow:
+        inset 0 1px 10px rgba(255,255,255,.82),
+        0 0 0 6px rgba(255,255,250,.18);
+    }
+
+    .concept-c .leaf {
+      background: linear-gradient(120deg, #55734c, #35543b);
+    }
+
+    .concept-d .widget {
+      background:
+        linear-gradient(90deg, rgba(64, 59, 48, .035) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(64, 59, 48, .032) 1px, transparent 1px),
+        rgba(248, 243, 231, .94);
+      background-size: 12px 12px;
+    }
+
+    .concept-d .lake {
+      width: 72px;
+      height: 72px;
+      background:
+        repeating-radial-gradient(circle, rgba(102, 94, 75, .24) 0 1px, transparent 1px 9px),
+        radial-gradient(circle, rgba(221, 216, 199, .70), rgba(185, 177, 153, .28));
+      box-shadow: inset 0 0 0 1px rgba(87, 77, 56, .10);
+    }
+
+    .concept-d .leaf {
+      width: 40px;
+      height: 11px;
+      background: linear-gradient(120deg, #526342, #34432c);
+      box-shadow: none;
+    }
+
+    .concept-e .widget {
+      background: #f7f1e7;
+    }
+
+    .concept-e .widget::before {
+      color: rgba(44, 41, 35, .82);
+    }
+
+    .concept-e .lake {
+      width: 70px;
+      height: 70px;
+      background:
+        radial-gradient(circle at 43% 35%, rgba(255,255,245,.72) 0 14%, transparent 15%),
+        radial-gradient(circle, #bfd7cd, #87a99c 62%, rgba(86, 103, 93, .12));
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 250, .72),
+        inset 0 -14px 20px rgba(35, 63, 55, .12),
+        0 0 0 1px rgba(38, 46, 38, .06);
+    }
+
+    .concept-e .leaf {
+      background: linear-gradient(118deg, #516f44, #2c513d);
+    }
+
+    .concept-e .listening .leaf::after {
+      background: var(--cinnabar);
+      height: 2px;
+      opacity: .75;
+    }
+
+    .notes {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1240px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding: 28px 18px 42px;
+      }
+
+      header {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <h1>指言 ZenTap · 湖面与竹叶的五个方向</h1>
+        <p class="subtitle">每个方向都保留一个极小的悬浮窗口：点击前，竹叶静浮；聆听时，水面起微澜，竹叶轻摆；结束后，水面归静。这里先探索气质，不急着定实现细节。</p>
+      </div>
+      <div class="mark">指</div>
+    </header>
+
+    <section class="grid" aria-label="ZenTap UI concepts">
+      <article class="concept concept-a">
+        <h2>01 静湖叶舟</h2>
+        <p>最接近当前产品：米纸底、淡湖色、竹叶像一叶小舟。克制、亲和，适合作为默认方向。</p>
+        <div class="states">
+          <div class="state-row">
+            <div class="state-label">静</div>
+            <div class="widget idle" data-copy="轻触输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">听</div>
+            <div class="widget listening" data-copy="正在聆听"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">归</div>
+            <div class="widget settle" data-copy="已输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept concept-b">
+        <h2>02 墨池微澜</h2>
+        <p>更文人、更淡墨。水面接近一方墨池，竹叶更细，整体更安静，但识别状态的可见性稍弱。</p>
+        <div class="states">
+          <div class="state-row">
+            <div class="state-label">静</div>
+            <div class="widget idle" data-copy="轻触输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">听</div>
+            <div class="widget listening" data-copy="正在聆听"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">归</div>
+            <div class="widget settle" data-copy="已输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept concept-c">
+        <h2>03 月白清波</h2>
+        <p>更现代、更 Apple。半透明米白面板加清亮湖面，保留禅意但更像国际化工具。</p>
+        <div class="states">
+          <div class="state-row">
+            <div class="state-label">静</div>
+            <div class="widget idle" data-copy="轻触输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">听</div>
+            <div class="widget listening" data-copy="正在聆听"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">归</div>
+            <div class="widget settle" data-copy="已输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept concept-d">
+        <h2>04 枯山水</h2>
+        <p>把“湖面”抽象成砂纹水波，东方性更强，也更独特。缺点是比真实湖面少一点温润。</p>
+        <div class="states">
+          <div class="state-row">
+            <div class="state-label">静</div>
+            <div class="widget idle" data-copy="轻触输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">听</div>
+            <div class="widget listening" data-copy="正在聆听"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">归</div>
+            <div class="widget settle" data-copy="已输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="concept concept-e">
+        <h2>05 青瓷水庭</h2>
+        <p>更精致、更产品化。青瓷湖面配一点朱砂状态提示，适合做更有记忆点的正式版。</p>
+        <div class="states">
+          <div class="state-row">
+            <div class="state-label">静</div>
+            <div class="widget idle" data-copy="轻触输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">听</div>
+            <div class="widget listening" data-copy="正在聆听"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+          <div class="state-row">
+            <div class="state-label">归</div>
+            <div class="widget settle" data-copy="已输入"><div class="lake"><span class="ripple"></span><span class="ripple"></span><span class="ripple"></span></div><span class="leaf"></span></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="notes">
+      推荐优先看 01、03、05：01 最温和，03 最现代，05 最有品牌识别度。04 可以作为未来“高级主题”，02 适合非常克制的用户。
+    </section>
+  </main>
+</body>
+</html>
