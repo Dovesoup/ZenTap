@@ -31,6 +31,7 @@ ZenTap begins with accessibility, but it is not only for a specific group. It is
 - Mouse-first: tap the floating window to start or stop dictation.
 - Privacy-first: uses the macOS Speech framework with on-device recognition required.
 - Offline-friendly: no network code, no upload path, no server.
+- Input-method bridge: optionally use ZenTap as a mouse-click trigger for third-party IME voice shortcuts, such as Doubao IME's `fn` voice shortcut.
 - Bilingual: Chinese and English recognition modes.
 - Minimal UI: standard mode plus Zen Mode, inspired by porcelain water and a bamboo leaf.
 - Open source: built to be studied, improved, localized, and shared.
@@ -52,6 +53,12 @@ ZenTap begins with accessibility, but it is not only for a specific group. It is
    ```
 
 4. Put the cursor in any text field, tap ZenTap, speak, then tap again.
+
+### Doubao IME bridge
+
+ZenTap can also work as a mouse-first bridge for Doubao IME voice input. Right-click ZenTap, choose `输入引擎 -> 豆包快捷键`, and keep `豆包快捷键 -> fn` selected unless you changed Doubao's shortcut. In this mode, Doubao performs the speech recognition and ZenTap only sends the shortcut when you click the floating window.
+
+Privacy note: the built-in ZenTap speech mode is on-device only. Doubao bridge mode follows Doubao IME's own recognition and privacy behavior.
 
 <p align="center">
   <img src="docs/assets/how-it-works.svg" alt="How ZenTap works" width="86%">

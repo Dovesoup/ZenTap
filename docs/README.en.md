@@ -21,6 +21,7 @@ The product idea is simple: a leaf rests on a quiet lake. Tap, speak, and let th
 - **Mouse-first**: start and stop dictation by clicking the floating window.
 - **Privacy-first**: uses the macOS Speech framework and requires on-device recognition.
 - **No upload path**: no server, no account system, no network upload code.
+- **Input-method bridge**: optionally turn ZenTap into a mouse-click trigger for third-party IME voice shortcuts, such as Doubao IME's `fn` shortcut.
 - **Chinese and English**: switch recognition language from the context menu.
 - **Zen-inspired UI**: porcelain lake, bamboo leaf, subtle ripples, and an ultra-minimal Zen Mode.
 - **Open source**: built to be inspected, improved, localized, and shared.
@@ -44,6 +45,21 @@ The product idea is simple: a leaf rests on a quiet lake. Tap, speak, and let th
 4. Place the cursor in any text field.
 5. Tap ZenTap and speak.
 6. Tap ZenTap again. The recognized text will be inserted at the cursor.
+
+## Doubao IME Bridge
+
+If you prefer Doubao IME's speech recognition quality, ZenTap can act only as the mouse-first trigger.
+
+Right-click the ZenTap floating window and choose:
+
+```text
+输入引擎 -> 豆包快捷键
+豆包快捷键 -> fn
+```
+
+Doubao IME currently recommends `fn` as its default voice shortcut. If you change the shortcut inside Doubao, choose the same preset from ZenTap's **豆包快捷键** menu.
+
+Privacy note: ZenTap's built-in speech mode is designed for on-device recognition. In **豆包快捷键** mode, Doubao IME performs the speech recognition, so Doubao's own recognition and privacy behavior applies.
 
 <p align="center">
   <img src="assets/how-it-works.svg" alt="How ZenTap works" width="86%">

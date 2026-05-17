@@ -98,6 +98,78 @@ enum ZenTapVisualMode {
     case zen
 }
 
+enum ZenTapInputMode: String, CaseIterable {
+    case appleSpeech
+    case doubaoShortcut
+
+    var title: String {
+        switch self {
+        case .appleSpeech:
+            return "系统离线识别"
+        case .doubaoShortcut:
+            return "豆包快捷键"
+        }
+    }
+
+    var idleTitle: String {
+        switch self {
+        case .appleSpeech:
+            return "轻触输入"
+        case .doubaoShortcut:
+            return "轻触豆包"
+        }
+    }
+}
+
+enum VoiceShortcutPreset: String, CaseIterable {
+    case functionKey
+    case optionSpace
+    case controlSpace
+    case commandShiftSpace
+    case f5
+
+    var title: String {
+        switch self {
+        case .functionKey:
+            return "fn"
+        case .optionSpace:
+            return "⌥ Space"
+        case .controlSpace:
+            return "⌃ Space"
+        case .commandShiftSpace:
+            return "⌘ ⇧ Space"
+        case .f5:
+            return "F5"
+        }
+    }
+
+    var keyCode: CGKeyCode {
+        switch self {
+        case .functionKey:
+            return CGKeyCode(kVK_Function)
+        case .optionSpace, .controlSpace, .commandShiftSpace:
+            return CGKeyCode(kVK_Space)
+        case .f5:
+            return CGKeyCode(kVK_F5)
+        }
+    }
+
+    var flags: CGEventFlags {
+        switch self {
+        case .functionKey:
+            return .maskSecondaryFn
+        case .optionSpace:
+            return .maskAlternate
+        case .controlSpace:
+            return .maskControl
+        case .commandShiftSpace:
+            return CGEventFlags(rawValue: CGEventFlags.maskCommand.rawValue | CGEventFlags.maskShift.rawValue)
+        case .f5:
+            return []
+        }
+    }
+}
+
 final class FloatingPanel: NSPanel {
     override var canBecomeKey: Bool { false }
     override var canBecomeMain: Bool { false }
@@ -130,6 +202,10 @@ final class ZenTapView: NSView {
     }
 
     var visualMode: ZenTapVisualMode = .standard {
+        didSet { needsDisplay = true }
+    }
+
+    var idleTitle: String = "轻触输入" {
         didSet { needsDisplay = true }
     }
 
@@ -427,7 +503,7 @@ final class ZenTapView: NSView {
         let color: NSColor
         switch state {
         case .idle:
-            text = "轻触输入"
+            text = idleTitle
             color = NSColor(calibratedRed: 0.17, green: 0.15, blue: 0.11, alpha: 0.84)
         case .requestingPermission:
             text = "等待授权"
@@ -769,13 +845,29 @@ final class TextInserter {
         NSWorkspace.shared.open(url)
     }
 
+    func sendShortcut(_ preset: VoiceShortcutPreset) -> Bool {
+        ztLog("shortcut requested preset=\(preset.rawValue)")
+        guard isAccessibilityTrusted(prompt: true) else {
+            openAccessibilitySettings()
+            ztLog("accessibility not trusted; shortcut blocked")
+            return false
+        }
+
+        postKey(preset.keyCode, flags: preset.flags)
+        ztLog("posted shortcut \(preset.title)")
+        return true
+    }
+
     private func postCommandV() {
+        postKey(CGKeyCode(kVK_ANSI_V), flags: .maskCommand)
+    }
+
+    private func postKey(_ key: CGKeyCode, flags: CGEventFlags) {
         let source = CGEventSource(stateID: .hidSystemState)
-        let key = CGKeyCode(kVK_ANSI_V)
         let down = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: true)
         let up = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: false)
-        down?.flags = .maskCommand
-        up?.flags = .maskCommand
+        down?.flags = flags
+        up?.flags = flags
         down?.post(tap: .cghidEventTap)
         up?.post(tap: .cghidEventTap)
     }
@@ -787,9 +879,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var panel: FloatingPanel!
     private var zenView: ZenTapView!
     private var statusItem: NSStatusItem!
+    private var selectedInputMode: ZenTapInputMode = ZenTapInputMode(
+        rawValue: UserDefaults.standard.string(forKey: "ZenTapInputMode") ?? ""
+    ) ?? .appleSpeech
+    private var selectedShortcutPreset: VoiceShortcutPreset = VoiceShortcutPreset(
+        rawValue: UserDefaults.standard.string(forKey: "ZenTapVoiceShortcutPreset") ?? ""
+    ) ?? .functionKey
     private var selectedLocale: ZenTapLocale = .chinese
     private var selectedPanelSize: ZenTapPanelSize = .small
     private var selectedVisualMode: ZenTapVisualMode = .standard
+    private var shortcutBridgeIsListening = false
     private var lastTargetApp: NSRunningApplication?
     private var clearNoticeWorkItem: DispatchWorkItem?
 
@@ -828,6 +927,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         zenView = ZenTapView(frame: NSRect(origin: .zero, size: size))
         zenView.locale = selectedLocale
         zenView.visualMode = selectedVisualMode
+        zenView.idleTitle = selectedInputMode.idleTitle
         zenView.onToggle = { [weak self] in
             self?.toggleDictation()
         }
@@ -872,6 +972,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func toggleDictation() {
+        if selectedInputMode == .doubaoShortcut {
+            toggleShortcutBridge()
+            return
+        }
+
         if speechController.hasActiveSession, zenView.state != .finishing {
             stopDictation()
             return
@@ -884,6 +989,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         default:
             startDictation()
+        }
+    }
+
+    private func toggleShortcutBridge() {
+        guard zenView.state != .requestingPermission, zenView.state != .finishing else { return }
+
+        clearNoticeWorkItem?.cancel()
+        zenView.transcript = selectedShortcutPreset.title
+        rememberCurrentTargetApp()
+
+        guard textInserter.sendShortcut(selectedShortcutPreset) else {
+            shortcutBridgeIsListening = false
+            showNotice("请授权辅助功能")
+            return
+        }
+
+        shortcutBridgeIsListening.toggle()
+        if shortcutBridgeIsListening {
+            zenView.state = .listening
+        } else {
+            zenView.state = .finishing
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
+                guard let self, self.selectedInputMode == .doubaoShortcut else { return }
+                self.showNotice("豆包输入")
+            }
         }
     }
 
@@ -930,6 +1060,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ztLog("target app=\(app.localizedName ?? app.bundleIdentifier ?? "unknown")")
     }
 
+    private func setInputMode(_ inputMode: ZenTapInputMode) {
+        if speechController.hasActiveSession {
+            speechController.stop { _ in }
+        }
+        selectedInputMode = inputMode
+        shortcutBridgeIsListening = false
+        zenView.idleTitle = inputMode.idleTitle
+        zenView.transcript = inputMode == .doubaoShortcut ? selectedShortcutPreset.title : ""
+        UserDefaults.standard.set(inputMode.rawValue, forKey: "ZenTapInputMode")
+        showNotice(inputMode.title)
+    }
+
+    private func setShortcutPreset(_ preset: VoiceShortcutPreset) {
+        selectedShortcutPreset = preset
+        shortcutBridgeIsListening = false
+        zenView.transcript = selectedInputMode == .doubaoShortcut ? preset.title : zenView.transcript
+        UserDefaults.standard.set(preset.rawValue, forKey: "ZenTapVoiceShortcutPreset")
+        showNotice("快捷键 \(preset.title)")
+    }
+
     private func setLocale(_ locale: ZenTapLocale) {
         selectedLocale = locale
         zenView.locale = locale
@@ -961,10 +1111,41 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func contextMenu() -> NSMenu {
         let menu = NSMenu()
 
-        let toggleTitle = zenView?.state == .listening ? "结束听写" : "开始听写"
+        let toggleTitle: String
+        if selectedInputMode == .doubaoShortcut {
+            toggleTitle = shortcutBridgeIsListening ? "结束豆包语音" : "开始豆包语音"
+        } else {
+            toggleTitle = zenView?.state == .listening ? "结束听写" : "开始听写"
+        }
         let toggle = NSMenuItem(title: toggleTitle, action: #selector(toggleFromMenu), keyEquivalent: "")
         toggle.target = self
         menu.addItem(toggle)
+
+        menu.addItem(NSMenuItem.separator())
+
+        let inputModeMenuItem = NSMenuItem(title: "输入引擎", action: nil, keyEquivalent: "")
+        let inputModeMenu = NSMenu(title: "输入引擎")
+        for inputMode in ZenTapInputMode.allCases {
+            let item = NSMenuItem(title: inputMode.title, action: #selector(inputModeFromMenu(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = inputMode.rawValue
+            item.state = inputMode == selectedInputMode ? .on : .off
+            inputModeMenu.addItem(item)
+        }
+        inputModeMenuItem.submenu = inputModeMenu
+        menu.addItem(inputModeMenuItem)
+
+        let shortcutMenuItem = NSMenuItem(title: "豆包快捷键", action: nil, keyEquivalent: "")
+        let shortcutMenu = NSMenu(title: "豆包快捷键")
+        for preset in VoiceShortcutPreset.allCases {
+            let item = NSMenuItem(title: preset.title, action: #selector(shortcutFromMenu(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = preset.rawValue
+            item.state = preset == selectedShortcutPreset ? .on : .off
+            shortcutMenu.addItem(item)
+        }
+        shortcutMenuItem.submenu = shortcutMenu
+        menu.addItem(shortcutMenuItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -1018,6 +1199,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func toggleFromMenu() {
         toggleDictation()
+    }
+
+    @objc private func inputModeFromMenu(_ sender: NSMenuItem) {
+        guard
+            let rawValue = sender.representedObject as? String,
+            let inputMode = ZenTapInputMode(rawValue: rawValue)
+        else { return }
+        setInputMode(inputMode)
+        statusItem.menu = contextMenu()
+    }
+
+    @objc private func shortcutFromMenu(_ sender: NSMenuItem) {
+        guard
+            let rawValue = sender.representedObject as? String,
+            let preset = VoiceShortcutPreset(rawValue: rawValue)
+        else { return }
+        setShortcutPreset(preset)
+        statusItem.menu = contextMenu()
     }
 
     @objc private func languageFromMenu(_ sender: NSMenuItem) {
