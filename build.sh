@@ -13,7 +13,7 @@ swift "${ROOT_DIR}/Resources/IconMaker.swift" "${BUILD_DIR}/${APP_NAME}.iconset"
 iconutil -c icns "${BUILD_DIR}/${APP_NAME}.iconset" -o "${BUILD_DIR}/${APP_NAME}.icns"
 
 swiftc \
-  "${ROOT_DIR}/Sources/ZenTap/main.swift" \
+  "${ROOT_DIR}/Sources/ZenTap/"*.swift \
   -o "${BUILD_DIR}/${APP_NAME}" \
   -framework AppKit \
   -framework ApplicationServices \

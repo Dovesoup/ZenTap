@@ -858,6 +858,23 @@ final class TextInserter {
         return true
     }
 
+    func sendDoubaoStopAction(_ action: DoubaoStopAction, repeating preset: VoiceShortcutPreset) -> Bool {
+        ztLog("doubao stop requested action=\(action.rawValue)")
+        guard isAccessibilityTrusted(prompt: true) else {
+            openAccessibilitySettings()
+            ztLog("accessibility not trusted; stop action blocked")
+            return false
+        }
+
+        if action == .repeatShortcut {
+            postKey(preset.keyCode, flags: preset.flags)
+        } else if let keyCode = action.keyCode {
+            postKey(keyCode, flags: action.flags)
+        }
+        ztLog("posted doubao stop action \(action.shortTitle)")
+        return true
+    }
+
     private func postCommandV() {
         postKey(CGKeyCode(kVK_ANSI_V), flags: .maskCommand)
     }
@@ -885,6 +902,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var selectedShortcutPreset: VoiceShortcutPreset = VoiceShortcutPreset(
         rawValue: UserDefaults.standard.string(forKey: "ZenTapVoiceShortcutPreset") ?? ""
     ) ?? .functionKey
+    private var selectedDoubaoStopAction: DoubaoStopAction = DoubaoStopAction(
+        rawValue: UserDefaults.standard.string(forKey: "ZenTapDoubaoStopAction") ?? ""
+    ) ?? .returnKey
     private var selectedLocale: ZenTapLocale = .chinese
     private var selectedPanelSize: ZenTapPanelSize = .small
     private var selectedVisualMode: ZenTapVisualMode = .standard
@@ -996,19 +1016,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         guard zenView.state != .requestingPermission, zenView.state != .finishing else { return }
 
         clearNoticeWorkItem?.cancel()
-        zenView.transcript = selectedShortcutPreset.title
+        zenView.transcript = doubaoBridgeSubtitle()
         rememberCurrentTargetApp()
 
-        guard textInserter.sendShortcut(selectedShortcutPreset) else {
-            shortcutBridgeIsListening = false
-            showNotice("请授权辅助功能")
-            return
-        }
-
-        shortcutBridgeIsListening.toggle()
-        if shortcutBridgeIsListening {
+        switch DoubaoBridgePlanner.nextAction(isListening: shortcutBridgeIsListening) {
+        case .startShortcut:
+            guard textInserter.sendShortcut(selectedShortcutPreset) else {
+                shortcutBridgeIsListening = false
+                showNotice("请授权辅助功能")
+                return
+            }
+            shortcutBridgeIsListening = true
             zenView.state = .listening
-        } else {
+
+        case .stopAction:
+            guard textInserter.sendDoubaoStopAction(selectedDoubaoStopAction, repeating: selectedShortcutPreset) else {
+                shortcutBridgeIsListening = false
+                showNotice("请授权辅助功能")
+                return
+            }
+            shortcutBridgeIsListening = false
             zenView.state = .finishing
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
                 guard let self, self.selectedInputMode == .doubaoShortcut else { return }
@@ -1067,7 +1094,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         selectedInputMode = inputMode
         shortcutBridgeIsListening = false
         zenView.idleTitle = inputMode.idleTitle
-        zenView.transcript = inputMode == .doubaoShortcut ? selectedShortcutPreset.title : ""
+        zenView.transcript = inputMode == .doubaoShortcut ? doubaoBridgeSubtitle() : ""
         UserDefaults.standard.set(inputMode.rawValue, forKey: "ZenTapInputMode")
         showNotice(inputMode.title)
     }
@@ -1075,9 +1102,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setShortcutPreset(_ preset: VoiceShortcutPreset) {
         selectedShortcutPreset = preset
         shortcutBridgeIsListening = false
-        zenView.transcript = selectedInputMode == .doubaoShortcut ? preset.title : zenView.transcript
+        zenView.transcript = selectedInputMode == .doubaoShortcut ? doubaoBridgeSubtitle() : zenView.transcript
         UserDefaults.standard.set(preset.rawValue, forKey: "ZenTapVoiceShortcutPreset")
         showNotice("快捷键 \(preset.title)")
+    }
+
+    private func setDoubaoStopAction(_ action: DoubaoStopAction) {
+        selectedDoubaoStopAction = action
+        shortcutBridgeIsListening = false
+        zenView.transcript = selectedInputMode == .doubaoShortcut ? doubaoBridgeSubtitle() : zenView.transcript
+        UserDefaults.standard.set(action.rawValue, forKey: "ZenTapDoubaoStopAction")
+        showNotice(action.noticeTitle)
+    }
+
+    private func doubaoBridgeSubtitle() -> String {
+        "\(selectedShortcutPreset.title) / \(selectedDoubaoStopAction.shortTitle)"
     }
 
     private func setLocale(_ locale: ZenTapLocale) {
@@ -1146,6 +1185,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         shortcutMenuItem.submenu = shortcutMenu
         menu.addItem(shortcutMenuItem)
+
+        let stopActionMenuItem = NSMenuItem(title: "豆包结束方式", action: nil, keyEquivalent: "")
+        let stopActionMenu = NSMenu(title: "豆包结束方式")
+        for action in DoubaoStopAction.allCases {
+            let item = NSMenuItem(title: action.title, action: #selector(stopActionFromMenu(_:)), keyEquivalent: "")
+            item.target = self
+            item.representedObject = action.rawValue
+            item.state = action == selectedDoubaoStopAction ? .on : .off
+            stopActionMenu.addItem(item)
+        }
+        stopActionMenuItem.submenu = stopActionMenu
+        menu.addItem(stopActionMenuItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -1216,6 +1267,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let preset = VoiceShortcutPreset(rawValue: rawValue)
         else { return }
         setShortcutPreset(preset)
+        statusItem.menu = contextMenu()
+    }
+
+    @objc private func stopActionFromMenu(_ sender: NSMenuItem) {
+        guard
+            let rawValue = sender.representedObject as? String,
+            let action = DoubaoStopAction(rawValue: rawValue)
+        else { return }
+        setDoubaoStopAction(action)
         statusItem.menu = contextMenu()
     }
 
