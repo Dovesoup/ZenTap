@@ -28,15 +28,14 @@
 
 ## 使用方法
 
-1. 构建并打开：
+1. 下载最新版 DMG：
 
-   ```bash
-   ./build.sh
-   open ~/Desktop/ZenTap.app
-   ```
+   [ZenTap-0.1.0.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.0.dmg)
 
-2. 第一次使用时，允许 macOS 请求的“麦克风”和“语音识别”权限。
-3. 如果希望自动输入到当前文本框，请打开：
+2. 打开 DMG，把 `ZenTap.app` 拖到“应用程序”。
+3. 首次打开时，macOS 可能提示“无法验证开发者”。这是因为当前开源包还没有做 Developer ID 公证；请右键点击 `ZenTap.app`，选择“打开”，再确认一次。
+4. 第一次使用时，允许 macOS 请求的“麦克风”和“语音识别”权限。
+5. 如果希望自动输入到当前文本框，请打开：
 
    ```text
    系统设置 -> 隐私与安全性 -> 辅助功能
@@ -44,9 +43,9 @@
 
    将 ZenTap 加入列表并打开权限。
 
-4. 在任意文本框放好光标。
-5. 点击 ZenTap 开始说话。
-6. 再次点击 ZenTap，识别出的文字会输入到光标处。
+6. 在任意文本框放好光标。
+7. 点击 ZenTap 开始说话。
+8. 再次点击 ZenTap，识别出的文字会输入到光标处。
 
 ## 豆包输入法桥接
 
@@ -88,7 +87,7 @@ ZenTap 的目标是离线、私密、透明。
 
 - 目前中文和英文需要手动切换。
 - 离线识别资源由 macOS 管理，部分系统可能需要安装对应语言资源。
-- 当前构建脚本生成的是本地测试版，正式发布需要 Developer ID 签名和 notarization。
+- 当前 DMG 使用本地临时签名，正式发布仍需要 Developer ID 签名和 notarization。
 - 开发版每次重新构建后，macOS 辅助功能权限可能需要重新添加。
 
 ## 从源码构建
@@ -103,6 +102,18 @@ ZenTap 的目标是离线、私密、透明。
 
 ```text
 ~/Desktop/ZenTap.app
+```
+
+如需生成可发布的 DMG：
+
+```bash
+./scripts/build-dmg.sh
+```
+
+DMG 会生成在：
+
+```text
+dist/ZenTap-0.1.0.dmg
 ```
 
 ## 参与贡献

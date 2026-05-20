@@ -38,21 +38,20 @@ ZenTap begins with accessibility, but it is not only for a specific group. It is
 
 ## Quick Start
 
-1. Build and open the app:
+1. Download the latest DMG:
 
-   ```bash
-   ./build.sh
-   open ~/Desktop/ZenTap.app
-   ```
+   [ZenTap-0.1.0.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.0.dmg)
 
-2. Allow microphone and speech recognition permissions when macOS asks.
-3. For automatic text insertion, enable ZenTap in:
+2. Open the DMG and drag `ZenTap.app` into `Applications`.
+3. On first launch, macOS may say the developer cannot be verified because this open-source build is not notarized yet. Right-click `ZenTap.app`, choose **Open**, then confirm.
+4. Allow microphone and speech recognition permissions when macOS asks.
+5. For automatic text insertion, enable ZenTap in:
 
    ```text
    System Settings -> Privacy & Security -> Accessibility
    ```
 
-4. Put the cursor in any text field, tap ZenTap, speak, then tap again.
+6. Put the cursor in any text field, tap ZenTap, speak, then tap again.
 
 ### Doubao IME bridge
 

@@ -4,9 +4,11 @@
 
 # Local build products
 build/
+dist/
 debug/
 *.app
 *.dSYM
+*.dmg
 
 # Local editor and package caches
 .vscode/

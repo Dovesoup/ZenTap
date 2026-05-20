@@ -28,23 +28,22 @@ The product idea is simple: a leaf rests on a quiet lake. Tap, speak, and let th
 
 ## How to Use
 
-1. Build and open the app:
+1. Download the latest DMG:
 
-   ```bash
-   ./build.sh
-   open ~/Desktop/ZenTap.app
-   ```
+   [ZenTap-0.1.0.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.0.dmg)
 
-2. Allow microphone and speech recognition permissions when macOS asks.
-3. To insert text automatically into other apps, enable ZenTap in:
+2. Open the DMG and drag `ZenTap.app` into `Applications`.
+3. On first launch, macOS may say the developer cannot be verified because this open-source build is not notarized yet. Right-click `ZenTap.app`, choose **Open**, then confirm.
+4. Allow microphone and speech recognition permissions when macOS asks.
+5. To insert text automatically into other apps, enable ZenTap in:
 
    ```text
    System Settings -> Privacy & Security -> Accessibility
    ```
 
-4. Place the cursor in any text field.
-5. Tap ZenTap and speak.
-6. Tap ZenTap again. The recognized text will be inserted at the cursor.
+6. Place the cursor in any text field.
+7. Tap ZenTap and speak.
+8. Tap ZenTap again. The recognized text will be inserted at the cursor.
 
 ## Doubao IME Bridge
 
@@ -86,7 +85,7 @@ ZenTap is designed to be offline-first, private, and inspectable.
 
 - Chinese and English are switched manually for now.
 - Offline recognition resources are managed by macOS and may need to be installed by the user.
-- The current build script creates a local test app. A public release should use Developer ID signing and notarization.
+- The current DMG uses local ad-hoc signing. A public release should still use Developer ID signing and notarization.
 - During development, rebuilding the app may require re-adding it to Accessibility permissions.
 
 ## Build from Source
@@ -101,6 +100,18 @@ The built app is placed at:
 
 ```text
 ~/Desktop/ZenTap.app
+```
+
+To create a distributable DMG:
+
+```bash
+./scripts/build-dmg.sh
+```
+
+The DMG is placed at:
+
+```text
+dist/ZenTap-0.1.0.dmg
 ```
 
 ## Contributing
