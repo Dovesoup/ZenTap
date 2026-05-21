@@ -902,9 +902,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var selectedShortcutPreset: VoiceShortcutPreset = VoiceShortcutPreset(
         rawValue: UserDefaults.standard.string(forKey: "ZenTapVoiceShortcutPreset") ?? ""
     ) ?? .functionKey
-    private var selectedDoubaoStopAction: DoubaoStopAction = DoubaoStopAction(
-        rawValue: UserDefaults.standard.string(forKey: "ZenTapDoubaoStopAction") ?? ""
-    ) ?? .returnKey
+    private var selectedDoubaoStopAction: DoubaoStopAction = DoubaoStopAction.resolvedStoredAction(
+        UserDefaults.standard.string(forKey: "ZenTapDoubaoStopAction")
+    )
     private var selectedLocale: ZenTapLocale = .chinese
     private var selectedPanelSize: ZenTapPanelSize = .small
     private var selectedVisualMode: ZenTapVisualMode = .standard
@@ -914,6 +914,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        UserDefaults.standard.set(selectedDoubaoStopAction.rawValue, forKey: "ZenTapDoubaoStopAction")
         setupFloatingPanel()
         setupStatusItem()
         observeFrontmostApplications()

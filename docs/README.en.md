@@ -30,7 +30,7 @@ The product idea is simple: a leaf rests on a quiet lake. Tap, speak, and let th
 
 1. Download the latest DMG:
 
-   [ZenTap-0.1.0.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.0.dmg)
+   [ZenTap-0.1.1.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.1.dmg)
 
 2. Open the DMG and drag `ZenTap.app` into `Applications`.
 3. On first launch, macOS may say the developer cannot be verified because this open-source build is not notarized yet. Right-click `ZenTap.app`, choose **Open**, then confirm.
@@ -58,7 +58,7 @@ Right-click the ZenTap floating window and choose:
 
 Doubao IME currently recommends `fn` as its default voice shortcut. If you change the shortcut inside Doubao, choose the same preset from ZenTap's **豆包快捷键** menu.
 
-In this mode, the first click sends Doubao's voice shortcut. The second click sends `Return` by default to submit and close Doubao's voice bar. If your Doubao version behaves differently, change **豆包结束方式** to `Esc`, `Shift`, or repeat the original shortcut.
+In this mode, the first click sends Doubao's voice shortcut. The second click sends `Shift` by default to stop Doubao's voice bar without sending a chat message. If your Doubao version behaves differently, change **豆包结束方式** to `Esc`, `Return`, or repeat the original shortcut. `Return` is kept as an advanced option because some chat apps treat it as Send.
 
 Privacy note: ZenTap's built-in speech mode is designed for on-device recognition. In **豆包快捷键** mode, Doubao IME performs the speech recognition, so Doubao's own recognition and privacy behavior applies.
 
@@ -111,7 +111,7 @@ To create a distributable DMG:
 The DMG is placed at:
 
 ```text
-dist/ZenTap-0.1.0.dmg
+dist/ZenTap-0.1.1.dmg
 ```
 
 ## Contributing

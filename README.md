@@ -40,7 +40,7 @@ ZenTap begins with accessibility, but it is not only for a specific group. It is
 
 1. Download the latest DMG:
 
-   [ZenTap-0.1.0.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.0.dmg)
+   [ZenTap-0.1.1.dmg](https://github.com/Dovesoup/ZenTap/releases/latest/download/ZenTap-0.1.1.dmg)
 
 2. Open the DMG and drag `ZenTap.app` into `Applications`.
 3. On first launch, macOS may say the developer cannot be verified because this open-source build is not notarized yet. Right-click `ZenTap.app`, choose **Open**, then confirm.
@@ -55,9 +55,9 @@ ZenTap begins with accessibility, but it is not only for a specific group. It is
 
 ### Doubao IME bridge
 
-ZenTap can also work as a mouse-first bridge for Doubao IME voice input. Right-click ZenTap, choose `输入引擎 -> 豆包快捷键`, and keep `豆包快捷键 -> fn` selected unless you changed Doubao's shortcut. In this mode, the first click sends Doubao's voice shortcut, and the second click sends `Return` by default to submit and close Doubao's voice bar.
+ZenTap can also work as a mouse-first bridge for Doubao IME voice input. Right-click ZenTap, choose `输入引擎 -> 豆包快捷键`, and keep `豆包快捷键 -> fn` selected unless you changed Doubao's shortcut. In this mode, the first click sends Doubao's voice shortcut, and the second click sends `Shift` by default to stop Doubao's voice bar without sending a chat message.
 
-If your Doubao setup behaves differently, use `豆包结束方式` to switch the second-click action to `Esc`, `Shift`, or repeat the original shortcut.
+If your Doubao setup behaves differently, use `豆包结束方式` to switch the second-click action to `Esc`, `Return`, or repeat the original shortcut. `Return` is kept as an advanced option because some chat apps treat it as Send.
 
 Privacy note: the built-in ZenTap speech mode is on-device only. Doubao bridge mode follows Doubao IME's own recognition and privacy behavior.
 

@@ -13,19 +13,28 @@ struct DoubaoBridgePlanner {
 }
 
 enum DoubaoStopAction: String, CaseIterable {
-    case returnKey
-    case escapeKey
     case shiftKey
+    case escapeKey
+    case returnKey
     case repeatShortcut
+
+    static let defaultAction: DoubaoStopAction = .shiftKey
+
+    static func resolvedStoredAction(_ rawValue: String?) -> DoubaoStopAction {
+        guard let rawValue, let action = DoubaoStopAction(rawValue: rawValue) else {
+            return defaultAction
+        }
+        return action == .returnKey ? defaultAction : action
+    }
 
     var title: String {
         switch self {
-        case .returnKey:
-            return "Return（提交并关闭）"
+        case .shiftKey:
+            return "Shift（安全停止）"
         case .escapeKey:
             return "Esc（关闭）"
-        case .shiftKey:
-            return "Shift（停止）"
+        case .returnKey:
+            return "Return（可能发送，慎用）"
         case .repeatShortcut:
             return "重复启动快捷键"
         }
@@ -46,12 +55,12 @@ enum DoubaoStopAction: String, CaseIterable {
 
     var noticeTitle: String {
         switch self {
-        case .returnKey:
-            return "Return结束"
-        case .escapeKey:
-            return "Esc结束"
         case .shiftKey:
             return "Shift结束"
+        case .escapeKey:
+            return "Esc结束"
+        case .returnKey:
+            return "Return结束"
         case .repeatShortcut:
             return "重复快捷键"
         }
